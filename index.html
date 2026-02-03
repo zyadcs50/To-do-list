@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>To Do List</title> 
+</head>
+<body>
+    <div class="container" id="cont">
+        <h2>📋To Do List</h2>
+        <h1 id="count" class="count2">Tasks: 0</h1>
+        <h1 id="Completed_tasks" class="count2">Completed Tasks: 0</h1>
+        <div class="controls">
+            <input type="text" placeholder="write your task" id="task" class="inp" required>
+            <button id="add">Add</button>
+            <br>
+            <br>
+            <br>
+            <button class="clear" id="clearall">Clear All</button>
+         </div>
+        <h2 id="task2"></h2>
+        <ul id="list" class="my-list"></ul>
+
+        <div id="congrats" style="
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4caf50;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        ">
+        🎉 Congrats! You completed your tasks!
+        </div>
+        <div id="warning" style="
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: red;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        ">
+        ⚠️ Please Write A Task
+        </div>
+        </div>
+        <div id="edit_warn" style="
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgb(109, 16, 16);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        ">
+        The Task Cannot be Empty
+        </div>
+        <div id="repeated" style="
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgb(165, 133, 28);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        ">
+        The Task is already Written
+        </div>
+        <div id="already_empty" style="
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgb(12, 109, 101);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        ">
+        The list is already empty
+    </div>
+    
+    <div id="clearModal" class="modal">
+        <div class="modal-box">
+            <h3>⚠️ Clear All Tasks</h3>
+            <p>Are you sure you want to delete all tasks?</p>
+            
+            <div class="modal-actions">
+                <button id="confirmClear">Yes, Clear</button>
+                <button id="cancelClear">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <button id="up">UP</button>
+            
+        </div>
+    <script src="main.js"></script>
+</body>
+</html>
