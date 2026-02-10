@@ -2,6 +2,7 @@ body {
   background-image: url(bg3.jpg);
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -11,13 +12,14 @@ body {
 .container {
   background-color: #3b0202c9;
   padding: 40px 40px;
-  margin-left: 100px;
+  /* margin-left: 100px; */
   border-radius: 30px;
 }
 .container h2 {
   font-family: sans-serif;
   text-align: center;
-  font-size: 30px;
+  font-size: 35px;
+  margin: 10px 0 5px 0;
   font-weight: 900;
 }
 
@@ -74,11 +76,11 @@ input {
 }
 
 #list li {
-  position: relative; /* مهم */
+  position: relative; 
   padding: 10px 40px 10px 10px;
   margin: 8px 0;
   border-radius: 4px;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 #list li .button {
@@ -160,6 +162,7 @@ input {
   background-color: red;
 }
 
+
 .todo-check {
   accent-color: green;
   position: absolute;
@@ -173,6 +176,38 @@ input {
 
 }
 
+
+
+.copyright{
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 22px;
+    margin: 5px 2px 4px 5px;
+
+}
+
+.copyright #myname{
+  color: black;
+  transition: ease 400ms;
+}
+
+.copyright #myname:hover{
+  color:#042530;
+  opacity: 60%;
+}
+
+.checked {
+  accent-color: red;
+  position: absolute;
+  left: 1px;
+  top: 50%;
+  transform: translateX(-200%);
+  margin: -9px 3px 16px 12px;
+  width: 17px;
+  height: 18px;
+  cursor: pointer;
+
+}
 /* .todo-check:checked  {
   content: "";
   position: absolute;
@@ -191,12 +226,12 @@ input {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: #08020266;
   z-index: 1000;
 }
 
 .modal-box {
-  background: rgb(118, 175, 161);
+  background: #76afa1;
   width: 300px;
   margin: 20px auto;
   padding: 15px;
@@ -267,4 +302,69 @@ input {
   background-color: #042530;
   transform: translatey(-4px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+}
+
+
+
+/* Responsive design */
+
+@media (max-width: 768px) {
+  .container {
+    padding: 25px;
+  }
+
+  .container h2 {
+    font-size: 28px;
+  }
+
+  input {
+    padding: 7px;
+  }
+
+  .controls #add {
+    width: 70px;
+    height: 32px;
+  }
+}
+
+
+
+@media (max-width: 480px) {
+  .container {
+    padding: 16px;
+    border-radius: 40px;
+  }
+
+  .container h2 {
+    font-size: 27px;
+  }
+
+  .controls {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  input {
+    margin-right: 0;
+    width: 100%;
+  }
+
+  .controls #add {
+    width: 100%;
+    height: 40px;
+  }
+  
+  .container .clear{
+    width: 100%;
+    height: 40px;
+    margin-right: 7px;
+  }
+
+  
+  .modal-box {
+    width: 200px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 30px;
+  }
 }
