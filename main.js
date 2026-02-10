@@ -1,73 +1,53 @@
+
+// global Variables 
 let task = document.getElementById("task");
 let list = document.getElementById("list");
 let arr = [];
-
 completed_arr = [];
+let comp = document.getElementById("Completed_tasks");
 
-console.log(localStorage.getItem("completed_tasks"))
 let completed = 0;
+let sound2 = document.getElementById("congrat")
 
-// document.addEventListener("DOMContentLoaded", function () {
-//     let saved = JSON.parse(localStorage.getItem("tasks")); // convert to array again
-//     let saved2 = JSON.parse(localStorage.getItem("completed_tasks")); // convert to array again
-
-//     if (saved) {
-
-        
-//         arr = saved;
-//         completed_arr = saved2;
-//         mycount.innerHTML = `Tasks: ${arr.length}`;
-//         // comp.innerHTML = `Completed Tasks: ${completed_arr.length}`
-
-
-//         // show tasks on page
-//         for(let i = 0; i < arr.length; i++){
-//             let btn = document.createElement("button"); // delete button
-//             let btn2 = document.createElement("button"); // edit button
-//             txt = document.createTextNode("❌");
-//             txt2 = document.createTextNode("✏️");
-//             btn.appendChild(txt);
-//             btn2.appendChild(txt2);
-
-//             let t = document.createElement("li");
-//             t.className = "tclass"
-//             t.textContent = arr[i];
-//             btn.className = "button"
-//             btn2.className = "edit"
-//             // t.appendChild(check);
-//             let check = document.createElement("input");
-//             check.type = "checkbox";
-//             check.setAttribute("id" , "checkme")
-//             check.classList.add("todo-check");
-//             t.appendChild(btn);
-//             t.appendChild(btn2);
-//             t.appendChild(check)
-//             list.appendChild(t);
-//         }
-//     }
-// });
+// local Storage
+let savedTasks = JSON.parse(localStorage.getItem("tasks"));
+let savedTasks2 = JSON.parse(localStorage.getItem("completed_tasks")) || [] ;
+if (savedTasks !== null) {
+  arr = savedTasks;
+  completed_arr = savedTasks2;
+  document.getElementById("count").innerHTML = `Tasks: ${arr.length}`
+  comp.innerHTML = `Completed Tasks: ${completed_arr.length}`
+  arr.forEach(function (task) {
+        if (completed_arr.includes(task)) {
+            buttons_actions(task, true);
+        } else {
+            buttons_actions(task);
+        }
+  });
+}
 
 
 
+function saveTasks() {
+  localStorage.setItem("tasks", JSON.stringify(arr));
+}
 
-let btn = document.getElementById("up");
 
-
-
-
+// Scroll UP button 
+let btn_up = document.getElementById("up");
 window.onscroll = function(){
 
     if(window.scrollY >= 250){
-      btn.style.display = "block";
+      btn_up.style.display = "block";
     }
     
     else{
       
-      btn.style.display = "none";
+      btn_up.style.display = "none";
     }
 }
 
-btn.onclick = function(){
+btn_up.onclick = function(){
     window.scrollTo({
       left: 0,
       top: 0,
@@ -79,21 +59,13 @@ btn.onclick = function(){
 
 
 
-
-
-
-
-
-let clear_button = document.getElementById("clearall");
-
-
+// Alert functions 
 function check_completed (){
-
     if(arr.length === completed_arr.length && completed_arr.length > 1){
         showCongrats();
+        sound2.play();
     }
 }
-
 
 function showCongrats() {
     const congrats = document.getElementById("congrats");
@@ -138,33 +110,186 @@ function already_empty() {
 
 
 
+function buttons_actions(w , b = false){
+    
+    
+    // buttons creation...
+    let t = document.createElement("li");
+    t.textContent = w;
+    let btn = document.createElement("button"); // delete button
+    let btn2 = document.createElement("button"); // edit button
+    txt = document.createTextNode("❌");
+    txt2 = document.createTextNode("✏️");
+    btn.appendChild(txt);
+    btn2.appendChild(txt2);
+    t.className = "tclass";
+    btn.className = "button"
+    let check = document.createElement("input");
+    check.type = "checkbox";
+    check.setAttribute("id" , "checkme")
+    check.classList.add("todo-check");
+    t.appendChild(check);
+    t.appendChild(btn);
+    t.appendChild(btn2);
+    list.appendChild(t);
+    btn2.className = "edit";
+    if(b === true){
+        t.children[0].checked = true;
+        t.className = "done"
 
-// Clear all 
+    }
+    // JSON.stringify(Object.fromEntries(mymap))
+    // for(let i = 0; i < completed_arr.length; i++){
+    //     if(completed_arr[i] === w){
+    //         t.children[0].checked = true;
+    //     }
+    // }
+
+// =================================================================================//
+
+
+// Edit button function
+btn2.onclick = function(){
+        let oldText = t.firstChild.textContent;
+        
+        console.log(oldText);
+        let index = arr.indexOf(oldText);
+        if(completed_arr.length === 1 && completed_arr[0] === t.textContent){completed_arr.pop()}
+        t.className = "tclass";
+        let input = document.createElement("input");
+        input.className = "inp";
+        input.maxLength = 26;
+        input.value = t.firstChild.textContent;
+        t.innerHTML = "";
+        t.appendChild(input);
+        t.appendChild(btn);
+        input.addEventListener("keydown", function(e){
+            if (e.key === "Enter"){
+                if(input.value !== ""){
+                    t.textContent = input.value;
+                    // arr.splice(oldText, 1)
+                    console.log(`index of ${arr[index]}`)
+                    // arr.push(input.value);
+                    if (index !== -1) {
+                        arr[index] = t.textContent;
+                    }
+                    saveTasks();
+                    t.appendChild(btn);
+                    t.appendChild(btn2);
+                    t.appendChild(check)
+                    if(check.checked){
+                        let index2 = completed_arr.indexOf(oldText);
+                        if(oldText != input.value){
+                            console.log(`our index ${index2}`)
+                            completed_arr.splice(index2 , 1);
+                            localStorage.setItem("completed_tasks", JSON.stringify(completed_arr)); // convert array to string
+                            comp.innerHTML = `Completed tasks: ${completed_arr.length}`
+                            check.checked = false;
+                        }
+                        
+                    }
+                }
+                else{
+                    edit_warning();
+                }
+            }
+        })
+    };
+
+// =================================================================================//
+
+
+    
+    // delete function 
+    btn.addEventListener("click", function(){
+        let oldText = t.firstChild.textContent;
+        let index = arr.indexOf(oldText);
+        if (index !== -1) {
+            console.log(`spliced`)
+            arr.splice(index, 1);
+        }
+        t.remove();
+        // console.log(`deleted: ${arr.indexOf(t.textContent)}`)
+        console.log(arr.length);
+        saveTasks();
+        mycount.innerHTML = `Tasks: ${arr.length}`;
+        if(completed_arr.length === 1 && completed_arr[0] === t.textContent){completed_arr.pop()}
+        for(let i = 0; i < completed_arr.length; i++){
+                if(t.firstChild.textContent === completed_arr[i]){
+                    completed_arr.splice(i, 1);
+                }
+        }
+
+        comp.innerHTML = `Completed Tasks: ${completed_arr.length}`
+        localStorage.setItem("completed_tasks", JSON.stringify(completed_arr)); // convert array to string
+
+    });
+
+
+// =================================================================================//
+
+
+    let sound = document.getElementById("sound");
+    // Checkbox function 
+    check.onclick = function (){
+        t.className = "done"
+        if(check.checked){ // if not checked
+            if(arr.length - completed_arr.length > 1){
+                sound.play();
+            }
+            // mymap[t] = false;
+            // JSON.stringify(Object.fromEntries(mymap))
+            // console.log(mymap)
+            completed_arr.push(t.firstChild.textContent);
+            localStorage.setItem("completed_tasks", JSON.stringify(completed_arr)); // convert array to string
+            
+            // console.log(completed_arr.length);
+            comp.innerHTML = `Completed Tasks: ${completed_arr.length}`
+            check_completed();
+            
+        }
+        if(!check.checked){ // if it is already checked
+            t.className = "tclass"
+
+            // mymap[t] = true;
+            // JSON.stringify(Object.fromEntries(mymap))
+            // console.log(mymap)
+            if(completed_arr.length === 1 && completed_arr[0] === t.textContent){completed_arr.pop()}
+            for(let i = 0; i < completed_arr.length; i++){
+                if(t.firstChild.textContent === completed_arr[i]){
+                    completed_arr.splice(i, 1);
+                    localStorage.setItem("completed_tasks", JSON.stringify(completed_arr)); // convert array to string
+                }
+            }
+            comp.innerHTML = `Completed Tasks: ${completed_arr.length}`
+            console.log(`length ${completed_arr.length}`)
+        }
+    }
+
+}
+
+
+
+let clear_button = document.getElementById("clearall");
+// Clear all function 
 clear_button.addEventListener("click" , function(){
         if (arr.length != 0){
-
-
             document.getElementById("clearModal").style.display = "block";
-
-            // result = confirm("Are you sure you want to clear all? ");
-            // if (result){
-            //     list.innerHTML = "";
-            //     arr = [];
-            //     mycount.innerHTML = `Tasks: ${arr.length}`
-            // }
-            // else{
-            //     console.log("cancel");
-            // }
     }
     else{
         already_empty();
     }
 });
 
+
+
+
+// cancel button 
 function closeModal() {
-  document.getElementById("clearModal").style.display = "none";
+    document.getElementById("clearModal").style.display = "none";
 }
 
+// confirm button 
 document.getElementById("confirmClear").onclick = function () {
   arr = [];
   completed_arr = [];
@@ -176,21 +301,18 @@ document.getElementById("confirmClear").onclick = function () {
   closeModal();
 };
 
+// =================================================================================//
+
 
 
 
 document.getElementById("cancelClear").onclick = closeModal;
-
-
-
 // ================================================================================ //
 
 mycount = document.getElementById("count");
 let tasks = arr.length;
 
-
-
-
+// Add task function 
 function add(){
     if (task.value === ""){
             warning();
@@ -206,164 +328,18 @@ function add(){
             if(repeated){repeated_warning();}
             else{
                     arr.push(task.value);
+                    // mymap.set(task.value , false);
+                    // console.log(mymap)
+                    saveTasks();
+
                     localStorage.setItem("tasks", JSON.stringify(arr)); // convert array to string
 
                     mycount.innerHTML = `Tasks: ${arr.length}`;
-                    let btn = document.createElement("button"); // delete button
-                    let btn2 = document.createElement("button"); // edit button
-                    txt = document.createTextNode("❌");
-                    txt2 = document.createTextNode("✏️");
-                    btn.appendChild(txt);
-                    btn2.appendChild(txt2);
-
-                    let t = document.createElement("li");
-                    t.textContent = task.value;
-                    btn.className = "button"
-
-
-                    // delete button function
-                    btn.addEventListener("click", function(){
-                        
-                        t.remove();
-                        arr.splice(arr.indexOf(t.textContent), 1);
-                        console.log(arr.length);
-                        mycount.innerHTML = `Tasks: ${arr.length}`;
-                        if(completed_arr.length === 1 && completed_arr[0] === t.textContent){completed_arr.pop()}
-                        for(let i = 0; i < completed_arr.length; i++){
-                                if(t.textContent === completed_arr[i]){
-                                    completed_arr.splice(i, 1);
-
-                                }
-                        }
-                        comp.innerHTML = `Completed Tasks: ${completed_arr.length}`
-
-                    });
-
-                    // ======================================================================================================= //
                     
-                    t.className = "tclass";
-                    let check = document.createElement("input");
-                    check.type = "checkbox";
-                    check.setAttribute("id" , "checkme")
-                    check.classList.add("todo-check");
-
-
-
-                    t.appendChild(check);
-                    t.appendChild(btn);
-                    t.appendChild(btn2);
-                    list.appendChild(t);
-                    // div_li = document.createElement("div");
-
-
-                    // Edit button function 
-                    function edit(){
-                        let oldText = t.firstChild.textContent;
-                        console.log(oldText)
-                        let index = arr.indexOf(oldText);
-                        console.log(`index : ${index}`)
-                        console.log(arr[index])
-                        console.log(arr)
-                        if(completed_arr.length === 1 && completed_arr[0] === t.textContent){completed_arr.pop()}
-                        for(let i = 0; i < completed_arr.length; i++){
-                            if(t.textContent === completed_arr[i]){
-                                completed_arr.splice(i, 1);
-                            }
-                        }
-                        t.className = "tclass";
-                        let input = document.createElement("input");
-                        input.className = "inp";
-                        input.value = t.firstChild.textContent;
-                        
-                        t.innerHTML = "";
-                        t.appendChild(input);
-                        t.appendChild(btn);
-                        
-                        input.addEventListener("keydown", function(e){
-                            if (e.key === "Enter"){
-                                if(input.value !== ""){
-                                    t.textContent = input.value;
-                                    if (index !== -1) {
-                                        arr[index] = t.textContent;
-                                    }
-                                    t.appendChild(btn);
-                                    t.appendChild(btn2);
-                                    t.appendChild(check)
-                                    if(check.checked){
-                                        completed_arr.push(t.textContent);
-                                        t.className = "done"
-                                    }
-                                }
-                                else{
-                                    edit_warning();
-                                }
-                            }
-                        })
-                        // input.onblur = function (){
-                        //     if(input.value !== ""){
-                        //             t.textContent = input.value;
-                        //             t.appendChild(btn);
-                        //             t.appendChild(btn2);
-                        //             t.appendChild(check)
-                        //         }
-                        //         else{
-                        //             alert("please write a task");
-                        //         }
-                        // }
-                    }
-
-
-
-                    // call edit button function 
-                    btn2.addEventListener("click", function(){
-                        edit();
-                    });
-                    
-
-                    let comp = document.getElementById("Completed_tasks");
-
-
-                    // Checkbox logic 
-                    check.onclick = function (){
-                        
-                        if(t.className === "tclass" && check.checked){ // if not checked
-                            completed_arr.push(t.textContent);
-                            localStorage.setItem("completed_tasks", JSON.stringify(completed_arr)); // convert array to string
-
-                            console.log(completed_arr.length);
-                            t.className = "done"
-                            completed++;
-                            comp.innerHTML = `Completed Tasks: ${completed_arr.length}`
-                            check_completed();
-                            
-                        }
-                        if(!check.checked){ // if it is already checked
-                            t.className = "tclass";
-
-                            if(completed_arr.length === 1 && completed_arr[0] === t.textContent){completed_arr.pop()}
-                            for(let i = 0; i < completed_arr.length; i++){
-                                if(t.textContent === completed_arr[i]){
-                                    completed_arr.splice(i, 1);
-
-                                    // completed--;
-                                }
-                            }
-                            comp.innerHTML = `Completed Tasks: ${completed_arr.length}`
-                            console.log(`length ${completed_arr.length}`)
-                        }
-                    }
-
-                    // ============================================================================================= // 
-
-
+                    buttons_actions(task.value);
 
                     task.value = "";
-                    btn2.className = "edit"
-                    let str = t.textContent;
             }
-
-            
-
         }
         
 }
@@ -371,11 +347,15 @@ function add(){
 
 
 
+
+// press Enter
 task.addEventListener("keydown" , function(e){
     if(e.key === "Enter"){
         add();
     }
 });
+
+// Click Add 
 document.getElementById("add").addEventListener("click", function(){
     add();
 });
