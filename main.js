@@ -234,7 +234,7 @@ btn2.onclick = function(){
     check.onclick = function (){
         t.className = "done"
         if(check.checked){ // if not checked
-            if(arr.length - completed_arr.length > 1){
+            if(arr.length - completed_arr.length > 0){
                 sound.play();
             }
             // mymap[t] = false;
