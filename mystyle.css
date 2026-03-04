@@ -48,6 +48,16 @@ body.dark #cancelClear{
 }
 
 
+li.dragging{
+  opacity: 0.5;
+}
+
+li.over{
+  outline: 2px dashed #afda9f;
+  outline-offset: 6px;
+}
+
+
 #dark{
    background-color: #0f5f77;
   position: fixed;
