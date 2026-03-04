@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mystyle.css">
     <link rel="icon" href="todo_fav.png">
 
     <title>To Do List</title> 
 </head>
 <body>
+    <button id="dark">🌙</button>
     <div class="container" id="cont">
 
-        <audio src="duolingo-correct.mp3" id="sound"></audio>
+        <audio src="/imessage-notification-sound-complete.mp3" id="sound"></audio>
         <audio src="duolingo-end-of-lesson.mp3" id="congrat"></audio>
-
+        <audio src="progress.mp3" id="prog"></audio>
         <h2>📋To Do List</h2>
         <h1 id="count" class="count2">Tasks: 0</h1>
         <h1 id="Completed_tasks" class="count2">Completed Tasks: 0</h1>
         <div class="controls">
-            <input type="text" placeholder="write your task" id="task" class="inp" required maxlength="27">
+            <input type="text" placeholder="write your task" id="task" class="inp" required maxlength="60">
             <button id="add">Add</button>
             <!-- <br>
             <br>
@@ -26,9 +27,9 @@
             <button class="clear" id="clearall">Clear All</button>
          </div>
         <h2 id="task2"></h2>
-        <ul id="list" class="my-list"></ul>
+        <ul id="list" class="list"></ul>
         <h3 class="copyright">💖Made With Love by <a href="https://www.linkedin.com/in/zyad-ahmed-470297320/" id="myname" target="_blank">Zyad Ahmed</a></h3>
-
+        
         <div id="congrats" style="
             display: none;
             position: fixed;
@@ -44,6 +45,38 @@
             z-index: 1000;
         ">
         🎉 Congrats! You completed All your tasks!
+        </div>
+        <div id="in-progress" style="
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4caf50;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        ">
+        ⚡Task In Progress
+        </div>
+        <div id="done_one" style="
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4caf50;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        ">
+         ✅ Task Done!
         </div>
         <div id="warning" style="
             display: none;
@@ -124,8 +157,10 @@
     </div>
     
     <button id="up">UP</button>
+
+    
             
         </div>
-    <script src="main.js"></script>
+    <script src="first.js"></script>
 </body>
 </html>
