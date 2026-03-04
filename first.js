@@ -8,6 +8,8 @@ completed_arr = [];
 let comp = document.getElementById("Completed_tasks");
 
 let completed = 0;
+let dragFromIndex = null;
+let isDragging = false;
 let sound2 = document.getElementById("congrat");
 const darkBtn = document.getElementById("dark");
 
@@ -41,6 +43,39 @@ function saveTasks() {
   localStorage.setItem("tasks", JSON.stringify(arr));
   localStorage.setItem("progress", JSON.stringify(progress_arr));
   localStorage.setItem("completed_tasks", JSON.stringify(completed_arr));
+
+}
+
+
+function dragDrop(card){
+        let newX = 0, newY = 0, startX=0, startY= 0;
+        card.addEventListener('mousedown', mouseDown);
+        function mouseDown(e){
+            startX = e.clientX;
+            startY = e.clientY;
+            
+            document.addEventListener('mousemove', mouseMove)
+            document.addEventListener('mouseup', mouseUp)
+        }
+        
+        function mouseMove(e){
+            newX = startX - e.clientX;
+            newY = startY - e.clientY;
+
+            startX = e.clientX;
+            startY = e.clientY;
+
+            card.style.top = (card.offsetTop - newY) + 'px';
+            card.style.left = (card.offsetLeft - newX) + 'px';
+
+            console.log({newX, newY});
+
+        }
+
+        function mouseUp(e){
+            document.removeEventListener('mousemove', mouseMove);
+
+        }
 
 }
 
@@ -133,16 +168,70 @@ function already_empty() {
   }, 3000);
 }
 
-function Sort_arr() {
-  arr.sort((a, b) => completed_arr.includes(a) - completed_arr.includes(b));
-  arr.sort((a, b) => progress_arr.includes(b) - progress_arr.includes(a));
+// function Sort_arr() {
+//   arr.sort((a, b) => completed_arr.includes(a) - completed_arr.includes(b));
+//   arr.sort((a, b) => progress_arr.includes(b) - progress_arr.includes(a));
+//   list.innerHTML = "";
+//   arr.forEach((t) => buttons_actions(t, completed_arr.includes(t)));
+// }
+
+
+function attachDragHandlers(li) {
+  li.addEventListener("dragstart", (e) => {
+    if (li.querySelector("input.inp")) {
+      e.preventDefault();
+      return;
+    }
+
+    isDragging = true;
+    li.classList.add("dragging");
+
+    
+    dragFromIndex = [...list.querySelectorAll("li")].indexOf(li);
+  });
+
+  li.addEventListener("dragend", () => {
+    isDragging = false;
+    li.classList.remove("dragging");
+    [...list.querySelectorAll("li")].forEach((x) => x.classList.remove("over"));
+  });
+
+  li.addEventListener("dragover", (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    li.classList.add("over");
+  });
+
+  li.addEventListener("dragleave", () => {
+    li.classList.remove("over");
+  });
+
+  li.addEventListener("drop", (e) => {
+    e.preventDefault();
+    li.classList.remove("over");
+    if (dragFromIndex === null) return;
+
+    const dragToIndex = [...list.querySelectorAll("li")].indexOf(li);
+    if (dragToIndex === dragFromIndex) return;
+
+    // const moved = arr.splice(dragFromIndex, 1)[0];
+    // arr.splice(dragToIndex, 0, moved);
+    let temp = arr[dragFromIndex];
+    arr[dragFromIndex] = arr[dragToIndex];
+    arr[dragToIndex] = temp;
+
+   
+    saveTasks();
+    rerenderWithoutSorting();
+  });
+}
+
+function rerenderWithoutSorting() {
   list.innerHTML = "";
   arr.forEach((t) => buttons_actions(t, completed_arr.includes(t)));
 }
 
 function buttons_actions(w, b = false) {
-
-  
   // buttons creation...
   let t = document.createElement("li");
   t.textContent = w;
@@ -166,6 +255,7 @@ function buttons_actions(w, b = false) {
   t.appendChild(btn);
   t.appendChild(btn2);
   t.appendChild(progressBtn);
+  t.draggable = true;
   if (progress_arr.includes(w)) {
     t.classList.add("progress");
   } else {
@@ -281,13 +371,13 @@ function buttons_actions(w, b = false) {
       progressAudio.play();
       progress_arr.push(text);
       prgoress_alert();
+      t.classList.add("progress");
     } else {
       progress_arr.splice(progress_arr.indexOf(text), 1);
       t.classList.remove("progress");
     }
 
     saveTasks();
-    Sort_arr();
   };
 
   // =================================================================================//
@@ -332,8 +422,10 @@ function buttons_actions(w, b = false) {
     }
 
     saveTasks();
-    Sort_arr();
   };
+
+    attachDragHandlers(t);
+
 }
 
 let clear_button = document.getElementById("clearall");
