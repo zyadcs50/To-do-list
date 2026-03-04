@@ -1,0 +1,380 @@
+body {
+  background: linear-gradient(185deg, #007a99, #042530);
+  min-height: 100vh;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
+}
+
+
+
+/* Adding Dark Mode... */ 
+body.dark{
+  background: linear-gradient(185deg, #0b0f14, #000);
+}
+
+body.dark .container{
+  background: rgba(255,255,255,0.05);
+}
+
+body.dark .list{
+  background: rgba(255,255,255,0.05);
+}
+
+body.dark #list li{
+  background: rgba(255,255,255,0.08);
+}
+
+body.dark .controls .clear{
+  background-color: rgb(53, 3, 3);
+}
+
+body.dark .controls #add{
+  background-color: #0f580c;
+}
+
+body.dark .modal-box{
+  background-color: #042530;
+  color: white;
+}
+body.dark #confirmClear{
+  background-color: #2b0706;
+}
+body.dark #cancelClear{
+  background-color: #23740b;
+}
+
+
+#dark{
+   background-color: #0f5f77;
+  position: fixed;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+#dark:hover{
+    background-color: #042530;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+
+
+
+
+/* 
+body.dark {
+  background-color: black;
+} */
+
+.container {
+  background: #082d362e;
+  width: 100%;
+  max-width: 600px;
+  padding: 30px 16px;
+  border-radius: 40px;
+  margin: 50px auto 20px;
+  box-shadow: 0 40px 45px rgba(16, 127, 170, 0.342);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.container h2 {
+  text-align: center;
+  font-size: 35px;
+  margin: 10px 0 5px 0;
+  font-weight: 900;
+  color: #eaf6ff;
+  text-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.container .count2 {
+  text-align: center;
+  color: rgba(234, 246, 255, 0.9);
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.controls,
+.list {
+  width: 100%;
+  max-width: 520px;
+  margin: 20px auto;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.controls input,
+.inp
+{
+  flex: 1;
+  min-width: 180px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+}
+
+
+
+.controls #add {
+  width: 90px;
+  height: 35px;
+  color: white;
+  background-color: #009900;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.controls #add:hover {
+  background-color: #0c530c;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+}
+
+.controls .clear {
+  width: 90px;
+  height: 35px;
+  color: white;
+  background-color: red;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.controls .clear:hover {
+  background-color: rgb(102, 9, 9);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+}
+
+#confirmClear {
+  background: #e53935;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.4s;
+}
+#confirmClear:hover {
+  background-color: rgb(102, 9, 9);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+}
+#cancelClear {
+  background-color: #009900;
+  border: none;
+  border-radius: 10px;
+  margin-left: 10px;
+  padding: 8px 15px;
+  cursor: pointer;
+  transition: 0.4s;
+}
+#cancelClear:hover {
+  background-color: #093f09;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+}
+
+.list {
+  list-style: none;
+  background: rgba(204, 183, 183, 0.75);
+  border-radius: 16px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+#list li {
+  position: relative;
+  padding: 12px 120px 12px 48px;
+  margin: 10px 0;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: 0.25s ease;
+}
+
+#list li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+}
+
+.tclass {
+  font-weight: bold;
+}
+
+.done {
+  color: #6e6e6e;
+  text-decoration: line-through;
+  opacity: 0.9;
+  font-weight: bold;
+}
+
+.progress {
+  color: #0b6b0b;
+  font-weight: bold;
+}
+
+#list li.progress {
+  border-left: 6px solid #009900;
+}
+
+/* ===== Buttons inside task ===== */
+#list li .button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.edit {
+  position: absolute;
+  right: 50px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.prog {
+  position: absolute;
+  right: 80px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.todo-check,
+.checked {
+  accent-color: green;
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 17px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.wraping {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #08020266;
+  z-index: 1000;
+}
+
+.modal-box {
+  background: #76afa1;
+  width: 300px;
+  margin: 20px auto;
+  padding: 15px;
+  border-radius: 15px;
+  text-align: center;
+}
+
+#up {
+  background-color: #0f5f77;
+  position: fixed;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  bottom: 20px;
+  right: 20px;
+  display: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#up:hover {
+  background-color: #042530;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+.copyright {
+  margin-top: auto;
+  border-radius: 50px;
+  width: 100%;
+  text-align: center;
+  padding: 14px 0;
+  font-size: 18px;
+  color: #eaf6ff;
+  background: rgba(26, 82, 118, 0.35);
+  backdrop-filter: blur(6px);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.copyright #myname {
+  color: #ffffff;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.copyright #myname:hover {
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+  }
+
+  .container h2 {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 14px;
+    border-radius: 25px;
+  }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .controls input,
+  .controls #add,
+  .controls .clear {
+    width: 100%;
+  }
+
+  .modal-box {
+    width: 220px;
+  }
+}
