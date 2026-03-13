@@ -1,86 +1,104 @@
-// global Variables
+// =========================
+// Global Variables
+// =========================
 let task = document.getElementById("task");
 let list = document.getElementById("list");
+let comp = document.getElementById("Completed_tasks");
+let mycount = document.getElementById("count");
+
 let arr = [];
 let progress_arr = [];
+let completed_arr = [];
 let completed_sign = false;
-completed_arr = [];
-let comp = document.getElementById("Completed_tasks");
 
-let completed = 0;
-let dragFromIndex = null;
-let isDragging = false;
 let sound2 = document.getElementById("congrat");
-const darkBtn = document.getElementById("dark");
+let darkBtn = document.getElementById("dark");
+let completedButton = document.getElementById("completed-button");
+let tasksButton = document.getElementById("tasks-button");
+let ProgressButton = document.getElementById("progress-button");
+let btn_up = document.getElementById("up");
 
-darkBtn.onclick = function(){
-    console.log("dark mode on");
-    document.body.classList.toggle("dark"); // adding and removing the dark mode
-}
+// =========================
+// Dark Mode
+// =========================
+darkBtn.onclick = function () {
+  document.body.classList.toggle("dark");
+};
 
-// local Storage
-let savedTasks = JSON.parse(localStorage.getItem("tasks"));
-let savedTasks2 = JSON.parse(localStorage.getItem("completed_tasks")) || [];
-let savedTasks3 = JSON.parse(localStorage.getItem("progress")) || [];
-if (savedTasks !== null) {
-  arr = savedTasks;
-  completed_arr = savedTasks2;
-  progress_arr = savedTasks3;
-  document.getElementById("count").innerHTML = `Tasks: ${arr.length}`;
-  comp.innerHTML = `Completed Tasks: ${completed_arr.length}`;
-  // arr.sort((a, b) => completed_arr.includes(a) - completed_arr.includes(b));
-  // arr.sort((a, b) => progress_arr.includes(b) - progress_arr.includes(a));
-  arr.forEach(function (task) {
-    if (completed_arr.includes(task)) {
-      buttons_actions(task, true);
-    } else {
-      buttons_actions(task);
-    }
-  });
-}
+// =========================
+// Local Storage Load
+// =========================
+let savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let savedCompleted = JSON.parse(localStorage.getItem("completed_tasks")) || [];
+let savedProgress = JSON.parse(localStorage.getItem("progress")) || [];
 
+arr = savedTasks;
+completed_arr = savedCompleted;
+progress_arr = savedProgress;
+tasksButton.classList.add("active");
+completedButton.classList.remove("active");
+ProgressButton.classList.remove("active");
+
+updateCounters();
+renderTasks();
+
+// =========================
+// Save Function
+// =========================
 function saveTasks() {
   localStorage.setItem("tasks", JSON.stringify(arr));
   localStorage.setItem("progress", JSON.stringify(progress_arr));
   localStorage.setItem("completed_tasks", JSON.stringify(completed_arr));
-
 }
 
+// =========================
+// Render Functions
+// =========================
+function renderTasks() {
+  list.innerHTML = "";
 
-function dragDrop(card){
-        let newX = 0, newY = 0, startX=0, startY= 0;
-        card.addEventListener('mousedown', mouseDown);
-        function mouseDown(e){
-            startX = e.clientX;
-            startY = e.clientY;
-            
-            document.addEventListener('mousemove', mouseMove)
-            document.addEventListener('mouseup', mouseUp)
-        }
-        
-        function mouseMove(e){
-            newX = startX - e.clientX;
-            newY = startY - e.clientY;
+  let pendingTasks = arr.filter(
+    (task) => !completed_arr.includes(task) && !progress_arr.includes(task),
+  );
 
-            startX = e.clientX;
-            startY = e.clientY;
-
-            card.style.top = (card.offsetTop - newY) + 'px';
-            card.style.left = (card.offsetLeft - newX) + 'px';
-
-            console.log({newX, newY});
-
-        }
-
-        function mouseUp(e){
-            document.removeEventListener('mousemove', mouseMove);
-
-        }
-
+  pendingTasks.forEach((task) => {
+    buttons_actions(task, false);
+  });
 }
 
-// Scroll UP button
-let btn_up = document.getElementById("up");
+function renderCompleted() {
+  list.innerHTML = "";
+
+  completed_arr.forEach((task) => {
+    buttons_actions(task, true);
+  });
+}
+
+function renderPrgress() {
+  list.innerHTML = "";
+
+  progress_arr.forEach((task) => {
+    buttons_actions(task, false);
+  });
+}
+
+function updateCounters() {
+  mycount.innerHTML = `Tasks: ${arr.length}`;
+  comp.innerHTML = `Completed Tasks: ${completed_arr.length}`;
+}
+
+// =========================
+// Sorting
+// =========================
+function Sort_arr() {
+  arr.sort((a, b) => completed_arr.includes(a) - completed_arr.includes(b));
+  arr.sort((a, b) => progress_arr.includes(b) - progress_arr.includes(a));
+  renderTasks();
+}
+
+// =========================
+// Scroll Up Button
+// =========================
 window.onscroll = function () {
   if (window.scrollY >= 250) {
     btn_up.style.display = "block";
@@ -97,13 +115,54 @@ btn_up.onclick = function () {
   });
 };
 
-// Alert functions
+// =========================
+// Toggle Buttons
+// =========================
+completedButton.onclick = function () {
+  // if (completed_arr.length === 0) {
+  //   alert("No Completed Tasks");
+  //   return;
+  // }
+
+  completedButton.classList.add("active");
+  tasksButton.classList.remove("active");
+  ProgressButton.classList.remove("active");
+  renderCompleted();
+};
+
+tasksButton.onclick = function () {
+  // let pendingTasks = arr.filter((task) => !completed_arr.includes(task));
+  // if (pendingTasks.length === 0) {
+  //   alert("No Tasks");
+  //   return;
+  // }
+
+  tasksButton.classList.add("active");
+  completedButton.classList.remove("active");
+  ProgressButton.classList.remove("active");
+  renderTasks();
+};
+
+ProgressButton.onclick = function () {
+  // if (progress_arr.length === 0) {
+  //   alert("No Tasks in progress");
+  //   return;
+  // }
+
+  completedButton.classList.remove("active");
+  tasksButton.classList.remove("active");
+  ProgressButton.classList.add("active");
+  renderPrgress();
+};
+
+// =========================
+// Alerts
+// =========================
 function check_completed() {
   if (arr.length === completed_arr.length && completed_arr.length > 1) {
     completed_sign = true;
     showCongrats();
     sound2.play();
-    
   }
 }
 
@@ -118,16 +177,15 @@ function showCongrats() {
 
 function prgoress_alert() {
   const congrats = document.getElementById("in-progress");
-
   congrats.style.display = "block";
 
   setTimeout(() => {
     congrats.style.display = "none";
   }, 2000);
 }
+
 function done_alert() {
   const congrats = document.getElementById("done_one");
-
   congrats.style.display = "block";
 
   setTimeout(() => {
@@ -143,6 +201,7 @@ function warning() {
     warn.style.display = "none";
   }, 3000);
 }
+
 function edit_warning() {
   const warn = document.getElementById("edit_warn");
   warn.style.display = "block";
@@ -151,6 +210,7 @@ function edit_warning() {
     warn.style.display = "none";
   }, 3000);
 }
+
 function repeated_warning() {
   const warn = document.getElementById("repeated");
   warn.style.display = "block";
@@ -159,6 +219,7 @@ function repeated_warning() {
     warn.style.display = "none";
   }, 3000);
 }
+
 function already_empty() {
   const warn = document.getElementById("already_empty");
   warn.style.display = "block";
@@ -168,234 +229,184 @@ function already_empty() {
   }, 3000);
 }
 
-// function Sort_arr() {
-//   arr.sort((a, b) => completed_arr.includes(a) - completed_arr.includes(b));
-//   arr.sort((a, b) => progress_arr.includes(b) - progress_arr.includes(a));
-//   list.innerHTML = "";
-//   arr.forEach((t) => buttons_actions(t, completed_arr.includes(t)));
-// }
-
-
-function attachDragHandlers(li) {
-  li.addEventListener("dragstart", (e) => {
-    if (li.querySelector("input.inp")) {
-      e.preventDefault();
-      return;
-    }
-
-    isDragging = true;
-    li.classList.add("dragging");
-
-    
-    dragFromIndex = [...list.querySelectorAll("li")].indexOf(li);
-  });
-
-  li.addEventListener("dragend", () => {
-    isDragging = false;
-    li.classList.remove("dragging");
-    [...list.querySelectorAll("li")].forEach((x) => x.classList.remove("over"));
-  });
-
-  li.addEventListener("dragover", (e) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    li.classList.add("over");
-  });
-
-  li.addEventListener("dragleave", () => {
-    li.classList.remove("over");
-  });
-
-  li.addEventListener("drop", (e) => {
-    e.preventDefault();
-    li.classList.remove("over");
-    if (dragFromIndex === null) return;
-
-    const dragToIndex = [...list.querySelectorAll("li")].indexOf(li);
-    if (dragToIndex === dragFromIndex) return;
-
-    // const moved = arr.splice(dragFromIndex, 1)[0];
-    // arr.splice(dragToIndex, 0, moved);
-    let temp = arr[dragFromIndex];
-    arr[dragFromIndex] = arr[dragToIndex];
-    arr[dragToIndex] = temp;
-
-   
-    saveTasks();
-    rerenderWithoutSorting();
-  });
-}
-
-function rerenderWithoutSorting() {
-  list.innerHTML = "";
-  arr.forEach((t) => buttons_actions(t, completed_arr.includes(t)));
-}
-
-function buttons_actions(w, b = false) {
-  // buttons creation...
+// =========================
+// Main Task Card Function
+// =========================
+function buttons_actions(w, isCompleted = false) {
   let t = document.createElement("li");
-  t.textContent = w;
-  let btn = document.createElement("button"); // delete button
-  let btn2 = document.createElement("button"); // edit button
-  let progressBtn = document.createElement("button");
-  txt = document.createTextNode("❌");
-  txt2 = document.createTextNode("✏️");
-  txt3 = document.createTextNode("🟩");
-  progressBtn.className = "prog";
-  btn.appendChild(txt);
-  btn2.appendChild(txt2);
-  progressBtn.appendChild(txt3);
   t.className = "tclass";
-  btn.className = "button";
+  t.draggable = true;
+
+  let textNode = document.createTextNode(w);
+  t.appendChild(textNode);
+
   let check = document.createElement("input");
   check.type = "checkbox";
-  check.setAttribute("id", "checkme");
   check.classList.add("todo-check");
+
+  let btn = document.createElement("button");
+  btn.className = "button";
+  btn.appendChild(document.createTextNode("❌"));
+
+  let btn2 = document.createElement("button");
+  btn2.className = "edit";
+  btn2.appendChild(document.createTextNode("✏️"));
+
+  let progressBtn = document.createElement("button");
+  progressBtn.className = "prog";
+  progressBtn.appendChild(document.createTextNode("🟩"));
+
   t.appendChild(check);
   t.appendChild(btn);
   t.appendChild(btn2);
   t.appendChild(progressBtn);
-  t.draggable = true;
+
   if (progress_arr.includes(w)) {
     t.classList.add("progress");
-  } else {
-    t.classList.remove("progress");
   }
-  if (completed_arr.includes(w)) {
+
+  if (completed_arr.includes(w) || isCompleted) {
     t.classList.add("done");
-  } else {
-    t.classList.remove("done");
+    check.checked = true;
   }
 
   list.appendChild(t);
-  btn2.className = "edit";
-  if (b === true) {
-    t.children[0].checked = true;
-    t.className = "done";
-  }
 
-  // =================================================================================//
-
-  // Edit button function
+  // =========================
+  // Edit
+  // =========================
   btn2.onclick = function () {
-    btn.style.display = "none";
     let oldText = t.firstChild.textContent;
-    console.log(oldText);
     let index = arr.indexOf(oldText);
-    if (completed_arr.length === 1 && completed_arr[0] === t.textContent) {
-      completed_arr.pop();
-    }
-    t.className = "tclass";
+
     let input = document.createElement("input");
     input.className = "inp";
     input.maxLength = 26;
-    input.value = t.firstChild.textContent;
+    input.value = oldText;
+
     t.innerHTML = "";
     t.appendChild(input);
     t.appendChild(btn);
+
+    input.focus();
+
     input.addEventListener("keydown", function (e) {
       if (e.key === "Enter") {
-        if (input.value !== "") {
-          btn.style.display = "block";
-          t.textContent = input.value;
-          console.log(`index of ${arr[index]}`);
-          // arr.push(input.value);
-          if (index !== -1) {
-            arr[index] = t.textContent;
-          }
-          saveTasks();
-          t.appendChild(btn);
-          t.appendChild(btn2);
-          t.appendChild(progressBtn);
-          t.appendChild(check);
-          if (check.checked) {
-            let index2 = completed_arr.indexOf(oldText);
-            if (oldText != input.value) {
-              console.log(`our index ${index2}`);
-              completed_arr.splice(index2, 1);
-              localStorage.setItem(
-                "completed_tasks",
-                JSON.stringify(completed_arr),
-              ); // convert array to string
-              comp.innerHTML = `Completed tasks: ${completed_arr.length}`;
-              check.checked = false;
-            }
-          }
-        } else {
+        let newValue = input.value.trim();
+
+        if (newValue === "") {
           edit_warning();
+          return;
+        }
+
+        if (newValue !== oldText && arr.includes(newValue)) {
+          repeated_warning();
+          return;
+        }
+
+        if (index !== -1) {
+          arr[index] = newValue;
+        }
+
+        let completedIndex = completed_arr.indexOf(oldText);
+        if (completedIndex !== -1) {
+          completed_arr[completedIndex] = newValue;
+        }
+
+        let progressIndex = progress_arr.indexOf(oldText);
+        if (progressIndex !== -1) {
+          progress_arr[progressIndex] = newValue;
+        }
+
+        saveTasks();
+        updateCounters();
+
+        if (completed_arr.includes(newValue)) {
+          renderCompleted();
+        } else {
+          Sort_arr();
         }
       }
     });
   };
 
-  // =================================================================================//
-
-  // delete function
-  btn.addEventListener("click", function () {
+  // =========================
+  // Delete
+  // =========================
+  btn.onclick = function () {
+    tasksButton.classList.add("active");
+    completedButton.classList.remove("active");
     let oldText = t.firstChild.textContent;
+
     let index = arr.indexOf(oldText);
     if (index !== -1) {
-      console.log(`spliced`);
       arr.splice(index, 1);
     }
-    t.remove();
-    // console.log(`deleted: ${arr.indexOf(t.textContent)}`)
-    console.log(arr.length);
-    saveTasks();
-    mycount.innerHTML = `Tasks: ${arr.length}`;
-    if (completed_arr.length === 1 && completed_arr[0] === t.textContent) {
-      completed_arr.pop();
-    }
-    for (let i = 0; i < completed_arr.length; i++) {
-      if (t.firstChild.textContent === completed_arr[i]) {
-        completed_arr.splice(i, 1);
-      }
-      if (t.firstChild.textContent === progress_arr[i]) {
-        progress_arr.splice(i, 1);
-      }
+
+    let completedIndex = completed_arr.indexOf(oldText);
+    if (completedIndex !== -1) {
+      completed_arr.splice(completedIndex, 1);
     }
 
-    comp.innerHTML = `Completed Tasks: ${completed_arr.length}`;
+    let progressIndex = progress_arr.indexOf(oldText);
+    if (progressIndex !== -1) {
+      progress_arr.splice(progressIndex, 1);
+    }
+
     saveTasks();
-  });
+    updateCounters();
 
+    if (completed_arr.includes(oldText)) {
+      renderCompleted();
+    } else {
+      Sort_arr();
+    }
+    check_completed();
+  };
 
+  // =========================
+  // Progress
+  // =========================
   progressBtn.onclick = function () {
     let text = t.firstChild.textContent;
-    let progressAudio = document.getElementById("prog")
-    if(completed_arr.includes(text)){
+    let progressAudio = document.getElementById("prog");
+
+    if (completed_arr.includes(text)) {
       alert("Completed Tasks Can not be in progress");
       return;
     }
+
     if (!progress_arr.includes(text)) {
-      progressAudio.play();
       progress_arr.push(text);
+      progressAudio.play();
       prgoress_alert();
-      t.classList.add("progress");
+
+      t.remove(); // remove from UI
     } else {
       progress_arr.splice(progress_arr.indexOf(text), 1);
-      t.classList.remove("progress");
     }
 
     saveTasks();
   };
 
-  // =================================================================================//
-
+  // =========================
+  // Check / Uncheck
+  // =========================
   let sound = document.getElementById("sound");
+
   check.onclick = function () {
     let text = t.firstChild.textContent;
+
     if (check.checked) {
-      t.className = "done";
       if (progress_arr.includes(text)) {
-        t.removeChild(progressBtn);
         progress_arr.splice(progress_arr.indexOf(text), 1);
       }
 
-      if(arr.length === 1){
+      if (arr.length === 1) {
         sound.play();
         done_alert();
       }
+
       if (arr.length - completed_arr.length > 1) {
         sound.play();
         done_alert();
@@ -405,97 +416,49 @@ function buttons_actions(w, b = false) {
         completed_arr.push(text);
       }
 
-      comp.innerHTML = `Completed Tasks: ${completed_arr.length}`;
       check_completed();
-      // list.appendChild(t);
     } else {
-      t.className = "tclass";
-      // list.prepend(t);
       let idx = completed_arr.indexOf(text);
       if (idx !== -1) {
         completed_arr.splice(idx, 1);
-        // arr.unshift(text);
-        // localStorage.setItem("completed_tasks", JSON.stringify(completed_arr));
       }
-
-      comp.innerHTML = `Completed Tasks: ${completed_arr.length}`;
     }
 
+    updateCounters();
     saveTasks();
+    Sort_arr();
+    tasksButton.classList.add("active");
+    completedButton.classList.remove("active");
+    ProgressButton.classList.remove("active");
   };
-
-    attachDragHandlers(t);
-
 }
 
-let clear_button = document.getElementById("clearall");
-// Clear all function
-clear_button.addEventListener("click", function () {
-  if (arr.length != 0) {
-    document.getElementById("clearModal").style.display = "block";
-  } else {
-    already_empty();
-  }
-});
-
-// cancel button
-function closeModal() {
-  document.getElementById("clearModal").style.display = "none";
-}
-
-// confirm button
-document.getElementById("confirmClear").onclick = function () {
-  arr = [];
-  completed_arr = [];
-  progress_arr = [];
-  list.innerHTML = "";
-
-  mycount.innerHTML = "Tasks: 0";
-  document.getElementById("Completed_tasks").innerHTML = "Completed Tasks: 0";
-  localStorage.clear();
-  closeModal();
-};
-
-// =================================================================================//
-
-document.getElementById("cancelClear").onclick = closeModal;
-// ================================================================================ //
-
-mycount = document.getElementById("count");
-let tasks = arr.length;
-
-// Add task function
+// =========================
+// Add Task
+// =========================
 function add() {
-  if (task.value === "") {
+  let value = task.value.trim();
+  tasksButton.classList.add("active");
+  completedButton.classList.remove("active");
+  ProgressButton.classList.remove("active");
+  if (value === "") {
     warning();
-  } else {
-    let repeated = false;
-    for (let i = 0; i < arr.length; i++) {
-      if (task.value === arr[i]) {
-        repeated = true;
-      }
-    }
-
-    if (repeated) {
-      repeated_warning();
-    } else {
-      arr.push(task.value);
-      // mymap.set(task.value , false);
-      // console.log(mymap)
-      saveTasks();
-
-      localStorage.setItem("tasks", JSON.stringify(arr)); // convert array to string
-
-      mycount.innerHTML = `Tasks: ${arr.length}`;
-
-      buttons_actions(task.value);
-
-      task.value = "";
-    }
+    return;
   }
+
+  if (arr.includes(value)) {
+    repeated_warning();
+    return;
+  }
+
+  arr.push(value);
+  saveTasks();
+  updateCounters();
+  Sort_arr();
+  task.value = "";
 }
 
-// press Enter
+// Press Enter
 task.addEventListener("keydown", function (e) {
   if (e.key === "Enter") {
     add();
@@ -506,3 +469,36 @@ task.addEventListener("keydown", function (e) {
 document.getElementById("add").addEventListener("click", function () {
   add();
 });
+
+// =========================
+// Clear All
+// =========================
+let clear_button = document.getElementById("clearall");
+
+clear_button.addEventListener("click", function () {
+  if (arr.length !== 0) {
+    document.getElementById("clearModal").style.display = "block";
+  } else {
+    already_empty();
+  }
+});
+
+function closeModal() {
+  document.getElementById("clearModal").style.display = "none";
+}
+
+document.getElementById("cancelClear").onclick = closeModal;
+
+document.getElementById("confirmClear").onclick = function () {
+  arr = [];
+  completed_arr = [];
+  progress_arr = [];
+  list.innerHTML = "";
+
+  localStorage.removeItem("tasks");
+  localStorage.removeItem("completed_tasks");
+  localStorage.removeItem("progress");
+
+  updateCounters();
+  closeModal();
+};

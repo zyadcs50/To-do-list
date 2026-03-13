@@ -358,6 +358,42 @@ body.dark {
   opacity: 0.7;
 }
 
+.buttons-options{
+    display:flex;
+    justify-content:center;
+    margin:20px 0;
+}
+
+.buttons-container{
+    background:#1e2a38;
+    padding:6px;
+    border-radius:12px;
+    display:flex;
+    gap:6px;
+}
+
+.buttons-container button{
+    padding:10px 22px;
+    border:none;
+    border-radius:8px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    color:#e6e6e6;
+    background:transparent;
+    transition:all 0.25s ease;
+}
+
+.buttons-container button:hover{
+    background:#2f3f54;
+}
+
+.buttons-container button.active{
+    background:#4da3ff;
+    color:white;
+    box-shadow:0 4px 10px rgba(77,163,255,0.4);
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 20px;
