@@ -27,12 +27,12 @@ This project was built to practice:
 * UI/UX improvements without frameworks
 
 ---
+## 🔗 Live Demo
 
-## 🖼️ Demo
+🚀 Try the app now:
+https://zippy-zuccutto-cbfa60.netlify.app/
 
-👉 (Add your Netlify / GitHub Pages link here)
 
----
 
 ## 🛠️ Technologies Used
 
