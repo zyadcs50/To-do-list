@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="mystyle.css">
-    <link rel="icon" href="todo_fav.png">
+    <link rel="icon" href="./assets/todo_fav.png">
 
     <title>To Do List</title> 
 </head>
@@ -12,30 +12,27 @@
     <button id="dark">🌙</button>
     <div class="container" id="cont">
 
-        <audio src="/imessage-notification-sound-complete.mp3" id="sound"></audio>
-        <audio src="duolingo-end-of-lesson.mp3" id="congrat"></audio>
-        <audio src="progress.mp3" id="prog"></audio>
+        <audio src="./assets/imessage-notification-sound-complete.mp3" id="sound"></audio>
+        <audio src="./assets/duolingo-end-of-lesson.mp3" id="congrat"></audio>
+        <audio src="./assets/progress.mp3" id="prog"></audio>
         <h2>📋To Do List</h2>
         <h1 id="count" class="count2">Tasks: 0</h1>
         <h1 id="Completed_tasks" class="count2">Completed Tasks: 0</h1>
         <div class="controls">
-            <input type="text" placeholder="write your task" id="task" class="inp" required maxlength="60">
+            <input autofocus type="text" placeholder="write your task" id="task" class="inp" required maxlength="60">
             <button id="add">Add</button>
-            <!-- <br>
-            <br>
-            <br> -->
             <button class="clear" id="clearall">Clear All</button>
          </div>
          <div class="buttons-options">
             <div class="buttons-container">
                 <button class="main-tasks" id="tasks-button">Tasks</button>
-                <button class="progress-tasks" id="progress-button">In-Progress</button>
+                <button class="progress-tasks" id="progress-button">Active</button>
                 <button class="completed-tasks" id="completed-button">Completed</button>
             </div>
          </div>
         <h2 id="task2"></h2>
         <ul id="list" class="list"></ul>
-        <h3 class="copyright">💖Developed With Love by <a href="https://www.linkedin.com/in/zyad-ahmed-470297320/" id="myname" target="_blank">Zyad Ahmed</a></h3>
+        <h3 class="copyright">💻 Developed  by <a href="https://www.linkedin.com/in/zyad-ahmed-470297320/" id="myname" target="_blank">Zyad Ahmed</a></h3>
         
         <div id="congrats" style="
             display: none;
@@ -68,6 +65,22 @@
             z-index: 1000;
         ">
         ⚡Task In Progress
+        </div>
+        <div id="CompletedProgress" style="
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #5c7220;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        ">
+        ⚠️ Completed Tasks Can not be in progress
         </div>
         <div id="done_one" style="
             display: none;
@@ -162,11 +175,7 @@
             </div>
         </div>
     </div>
-    
     <button id="up">UP</button>
-
-    
-            
         </div>
     <script src="first.js"></script>
 </body>
